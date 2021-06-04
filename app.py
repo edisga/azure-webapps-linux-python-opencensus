@@ -5,6 +5,7 @@ from opencensus.ext.azure.log_exporter import AzureLogHandler
 
 app = Flask(__name__)
 logger = logging.getLogger(__name__)
+gunicorn_logger = logging.getLogger('gunicorn.error')
 
 @app.route('/', methods=['GET'])
 def home():
@@ -20,6 +21,14 @@ def signal_handler(signum, frame):
     logger.warning("Signal number: " + str(signum) + "Frame: " + str(frame))
     print("Signal number: " + str(signum) + "Frame: " + str(frame))
     return
+
+if __name__ != '__main__':
+    logger.addHandler(AzureLogHandler(connection_string='InstrumentationKey=e68b4afd-0d26-44ce-a1ae-b0707eb83c64'))
+    logger.setLevel(logging.INFO)
+    logger.addHandler(gunicorn_logger.handlers)
+    logger.setLevel(gunicorn_logger.level)
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
 
 if __name__ == '__main__':
     logger.addHandler(AzureLogHandler(connection_string='InstrumentationKey=e68b4afd-0d26-44ce-a1ae-b0707eb83c64'))
