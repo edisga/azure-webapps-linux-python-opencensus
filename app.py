@@ -2,6 +2,9 @@ from flask import Flask
 import signal, os
 import logging
 from opencensus.ext.azure.log_exporter import AzureLogHandler
+from datetime import datetime
+
+now = datetime.now()
 
 app = Flask(__name__)
 logger = logging.getLogger(__name__)
@@ -13,13 +16,15 @@ def home():
     return "Hello from Flask"
 
 def exit_handler(signum, frame):
-    logger.warning("Exiting because of signal number" + str(signum) + "Frame: " + str(frame))
-    print("Exiting because of signal number" + str(signum) + "Frame: " + str(frame))
+    current_time = now.strftime("%H:%M:%S")
+    logger.warning("Exiting because of signal number" + str(signum) + "| Time: " + str(current_time))
+    print("Exiting because of signal number" + str(signum) + "| Time: " + str(current_time))
     exit(0)
 
 def signal_handler(signum, frame):
-    logger.warning("Signal number: " + str(signum) + "Frame: " + str(frame))
-    print("Signal number: " + str(signum) + "Frame: " + str(frame))
+    current_time = now.strftime("%H:%M:%S")
+    logger.warning("Signal number: " + str(signum) + "| Time: " + str(current_time))
+    print("Signal number: " + str(signum) + "| Time: " + str(current_time))
     return
 
 if __name__ != '__main__':
