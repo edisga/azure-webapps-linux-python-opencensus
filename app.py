@@ -25,7 +25,7 @@ def signal_handler(signum, frame):
 if __name__ != '__main__':
     logger.addHandler(AzureLogHandler(connection_string='InstrumentationKey=e68b4afd-0d26-44ce-a1ae-b0707eb83c64'))
     logger.setLevel(logging.INFO)
-    logger.addHandler(gunicorn_logger.handlers)
+    logger.addHandler(gunicorn_logger.handlers[0])
     logger.setLevel(gunicorn_logger.level)
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
